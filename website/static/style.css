@@ -1,0 +1,61 @@
+* {
+	margin: 0;
+	padding: 0; 
+}
+body {
+	font-family: "Aileron";
+	font-weight: 400;
+	font-size: 14px; 
+}
+h1, h2, h3, h4, h5, h6 {
+	font-family: "Aileron";
+	color: #303030;
+	line-height: 1.4;
+	font-weight: 600; 
+}
+.container {
+	margin-left: 20px;
+}
+.single-welcome-slide .welcome-text {
+    position: relative;
+}
+.single-welcome-slide .welcome-text h2 {
+    font-size: 45px;
+    display: block;
+    margin-bottom: 30px;
+}
+.single-welcome-slide .welcome-text h2 span {
+	font-size: 48px;
+    color: #2e73b8;
+}
+.single-welcome-slide .welcome-text h5 {
+    font-size: 22px;
+    color: #a6a6a6;
+    margin-bottom: 60px;
+    display: block;
+}
+.train-btn {
+    background-color: #2e73b8;
+    color: #fff;
+    position: relative;
+    min-width: 160px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    display: inline-block;
+    padding: 0 30px;
+    text-align: center;
+    text-transform: capitalize;
+    border: none;
+    border-radius: 50px;
+    -webkit-transition-duration: 500ms;
+    -o-transition-duration: 500ms;
+    transition-duration: 500ms;
+    -webkit-box-shadow: 0 6px 50px 8px rgba(46,115,184,.15);
+    box-shadow: 0 6px 50px 8px rgba(46,115,184,.15);
+}
+.train-btn:hover {
+	background-color: #ffffff;
+	color: #2e73b8;
+}
