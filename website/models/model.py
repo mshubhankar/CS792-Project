@@ -8,10 +8,13 @@ from torch import nn
 import torch.nn.functional as F
 from torch import optim
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
 
 class Model:
     def __init__(self, socketio):
         self.model = nn.Linear(8,1)
+        self.scaler = StandardScaler()
         self.socketio = socketio
 
     def trainModel(self, file):
@@ -32,9 +35,7 @@ class Model:
         dtype=torch.float
         device=torch.device("cpu")
 
-        from sklearn.preprocessing import StandardScaler
-        model=StandardScaler()
-        X=model.fit_transform(X)
+        X=self.scaler.fit_transform(X)
 
         X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=0)
 
@@ -130,6 +131,6 @@ class Model:
         self.socketio.emit('message', {'data': 'Model trained with accuracy: {0:.2f} %'.format(accuracy*100)})
 
     def testModel(self, data):
-        data = torch.from_numpy(np.array(data)).type(torch.FloatTensor)
+        data = torch.from_numpy(self.scaler.transform(np.array([data]))).type(torch.FloatTensor)
         pred = torch.round(self.model(data))
-        self.socketio.emit('prediction', {'data': 'Prediction: {}'.format(pred)})
+        self.socketio.emit('prediction', {'data': 'Prediction: {}'.format(0 if pred == 0 else 1)})
