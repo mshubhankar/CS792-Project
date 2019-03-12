@@ -128,9 +128,9 @@ class Model:
         incorrect_labels=len(np.nonzero(output))
 
         accuracy = 1-(incorrect_labels/len(X_test))
-        self.socketio.emit('message', {'data': 'Model trained with accuracy: {0:.2f} %'.format(accuracy*100)})
+        self.socketio.emit('accuracy', {'data': 'Model trained with accuracy: {0:.2f} %'.format(accuracy*100)})
 
     def testModel(self, data):
         data = torch.from_numpy(self.scaler.transform(np.array([data]))).type(torch.FloatTensor)
         pred = torch.round(self.model(data))
-        self.socketio.emit('prediction', {'data': 'Prediction: {}'.format(0 if pred == 0 else 1)})
+        self.socketio.emit('prediction', {'data': 0 if pred == 0 else 1})
