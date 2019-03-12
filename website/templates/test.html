@@ -3,18 +3,51 @@
 {% block content %}
 <section class="progress-area">
 	<div class="container h-100">
-        <form id="test" method="POST" action='#'>
-	        <input type="text" name="age" id="age" placeholder="Age">
-	        <input type="text" name="preg" id="preg" placeholder="Pregnancies">
-	        <input type="text" name="gluc" id="gluc" placeholder="Glucose">
-	        <input type="text" name="bp" id="bp" placeholder="Blood Pressure">
-	        <input type="text" name="skin" id="skin" placeholder="Skin Thickness">
-	        <input type="text" name="ins" id="ins" placeholder="Insulin">
-	        <input type="text" name="bmi" id="bmi" placeholder="BMI">
-	        <input type="text" name="dpf" id="dpf" placeholder="Diabetes Pedigree Function">
-	        <input type="submit" value="Get diagnosis">
-	    </form>
-	    <div id="prediction"></div>
+        <form id="test" method="POST" action='#' class="h-100 w-75">
+            <div class="row h-100 ml-5 mt-2 w-100">
+                <div class="d-flex flex-column w-100">
+                    <div class="d-flex justify-content-center">
+                        <h2>Test model</h2>
+                    </div>
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="text" class="form-control" id="age" placeholder="Enter age">
+                    </div>
+                    <div class="form-group">
+                        <label for="preg">Number of Pregnancies</label>
+                        <input type="text" class="form-control" id="preg" placeholder="Enter pregnancies">
+                    </div>
+                    <div class="form-group">
+                        <label for="gluc">Glucose Level</label>
+                        <input type="text" class="form-control" id="gluc" placeholder="Enter glucose">
+                    </div>
+                    <div class="form-group">
+                        <label for="bp">Blood Pressure</label>
+                        <input type="text" class="form-control" id="bp" placeholder="Enter blood pressure">
+                    </div>
+                    <div class="form-group">
+                        <label for="skin">Skin Thickness</label>
+                        <input type="text" class="form-control" id="skin" placeholder="Enter skin thickness">
+                    </div>
+                    <div class="form-group">
+                        <label for="ins">Insulin Level</label>
+                        <input type="text" class="form-control" id="ins" placeholder="Enter insulin">
+                    </div>
+                    <div class="form-group">
+                        <label for="bmi">Body Mass Index</label>
+                        <input type="text" class="form-control" id="bmi" placeholder="Enter BMI">
+                    </div>
+                    <div class="form-group">
+                        <label for="dpf">Diabetes Pedigree Function</label>
+                        <input type="text" class="form-control" id="dpf" placeholder="Enter diabetes pedigree function">
+                    </div>
+                    <div class="d-flex justify-content-center">
+        	           <input type="submit" value="Get diagnosis" class="btn train-btn">
+                    </div>
+                    <div id="prediction"></div>
+                </div>
+            </div>
+    	</form>
     </div>
 </section>
 <script>
