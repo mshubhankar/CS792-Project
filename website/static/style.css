@@ -158,3 +158,29 @@ blink {
 .bg-secondary span, .arrow-text {
     font-weight: 600;
 }
+.tooltip-text {
+  visibility: hidden;
+  white-space: nowrap;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 2px 8px;
+  position: absolute;
+  z-index: 1;
+  top: -2px;
+  left: 130%;
+}
+.tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  margin-top: -4px;
+  border-width: 4px;
+  border-style: solid;
+  border-color: transparent black transparent transparent;
+}
+.d-inline-block:hover .tooltip-text {
+  visibility: visible;
+}
