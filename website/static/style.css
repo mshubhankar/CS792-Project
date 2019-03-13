@@ -59,3 +59,102 @@ h1, h2, h3, h4, h5, h6 {
 	background-color: #ffffff;
 	color: #2e73b8;
 }
+.arrows {
+    height: 100px;
+    margin-bottom: 10px;
+}
+.arrow, .arrow1 {
+    width: 100px;
+    height: 100px;
+    position: relative;
+}
+.left-arrow .arrow-head:before {
+    display: block;
+    content: "";
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    border-bottom: 4px solid #000;
+    border-left: 4px solid #000;
+}
+.right-arrow .arrow-head:after {
+    display: block;
+    content: "";
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border-bottom: 4px solid #000;
+    border-right: 4px solid #000;
+}
+.right-arrow1 .arrow-head:before {
+    display: block;
+    content: "";
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: -15px;
+    left: -1px;
+    border-top: 4px solid #000;
+    border-left: 4px solid #000;
+}
+.left-arrow1 .arrow-head:before {
+    display: block;
+    content: "";
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: -15px;
+    right: -1px;
+    border-top: 4px solid #000;
+    border-right: 4px solid #000;
+}
+.arrow:before, .arrow1:before {
+    position: absolute;
+    content: "";
+    bottom: 55px;
+    border-top: 4px solid;
+}
+.left-arrow:before, .left-arrow1:before {
+    left: -14px;
+    right: -15px;
+    transform:rotate(-30deg);
+}
+.right-arrow:before, .right-arrow1:before {
+    left: -15px;
+    right: -14px;
+    transform:rotate(30deg);
+}
+blink {
+    font-weight: 600;
+    -webkit-animation: 1s linear infinite condemned_blink_effect; // for android
+    animation: 1s linear infinite condemned_blink_effect;
+}
+@-webkit-keyframes condemned_blink_effect { // for android
+    0% {
+        visibility: hidden;
+    }
+    50% {
+        visibility: hidden;
+    }
+    100% {
+        visibility: visible;
+    }
+}
+@keyframes condemned_blink_effect {
+    0% {
+        visibility: hidden;
+    }
+    50% {
+        visibility: hidden;
+    }
+    100% {
+        visibility: visible;
+    }
+}
+.bg-secondary span, .arrow-text {
+    font-weight: 600;
+}

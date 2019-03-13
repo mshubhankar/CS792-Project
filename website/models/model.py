@@ -25,13 +25,12 @@ class Model:
         bob.add_workers([alice, secure_worker])
         alice.add_workers([bob, secure_worker])
         secure_worker.add_workers([alice, bob])
-        self.socketio.emit('message', {'data': 'Looking for diabaetes patients . . . '})
+        self.socketio.emit('message', {'data': 'Looking for diabetes patients . . . '})
         dataframe=np.genfromtxt(file,delimiter=',',skip_header=1)
 
         X=dataframe[:,0:8]
         Y=dataframe[:,8]
         Y=Y.reshape(768,1)
-        self.socketio.emit('message', {'data': '{} patients found!'.format(X.shape[0])})
         dtype=torch.float
         device=torch.device("cpu")
 
@@ -46,11 +45,16 @@ class Model:
         data_length,data_width=data.shape
 
         bobs_data = data[0:int(data_length/2)].send(bob)
+        self.socketio.emit('message', {'data': '{} patients found in Organization A'.format(bobs_data.shape[0])})
         bobs_target = target[0:int(data_length/2)].send(bob)
 
         alices_data = data[int(data_length/2):].send(alice)
+        self.socketio.emit('message', {'data': '{} patients found in Organization B'.format(alices_data.shape[0])})
         alices_target = target[int(data_length/2):].send(alice)
 
+        self.socketio.emit('message', {'data': 'Total patients found : {}'.format(bobs_data.shape[0]+alices_data.shape[0])})
+
+        self.socketio.emit('send_model')
 
         # Initialize A Toy Model
 
@@ -82,11 +86,13 @@ class Model:
             alices_opt.step()
             alices_loss = alices_loss.get().data
 
+        self.socketio.emit('start_model');
+
         iterations = 10
         worker_iters = 200
-        self.socketio.emit('message', {'data': 'Training on two organizations . . .'})
+        a_progress = 0
+        b_progress = 0
         for a_iter in range(iterations):
-            self.socketio.emit('message', {'data': 'Iteration : {}'.format(a_iter+1)})
             bobs_model = self.model.copy().send(bob)
             alices_model = self.model.copy().send(alice)
 
@@ -102,6 +108,9 @@ class Model:
                 bobs_loss.backward()        
                 bobs_opt.step()
                 bobs_loss = bobs_loss.get().data
+                if not (wi % 20):
+                    a_progress += 1
+                    self.socketio.emit('bar1_update', {'data' : '{}%'.format(a_progress)});
 
                 # Train Alice's Model
                 alices_opt.zero_grad()
@@ -110,12 +119,16 @@ class Model:
                 alices_loss.backward()
                 alices_opt.step()
                 alices_loss = alices_loss.get().data
-            
+                if not (wi % 20):
+                    b_progress += 1
+                    self.socketio.emit('bar2_update', {'data' : '{}%'.format(b_progress)});
             alices_model.move(secure_worker)
             bobs_model.move(secure_worker)
             
             self.model.weight.data.set_(((alices_model.weight.data + bobs_model.weight.data) / 2).get())
             self.model.bias.data.set_(((alices_model.bias.data + bobs_model.bias.data) / 2).get())
+
+        self.socketio.emit('stop_model')
 
         X_test = torch.from_numpy(X_test)
         y_test = torch.from_numpy(y_test)
