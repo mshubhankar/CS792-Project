@@ -1,4 +1,4 @@
-from flask import Flask, render_template, g
+from flask import Flask, render_template, g, redirect, url_for
 from flask_socketio import SocketIO, emit
 from models.model import Model
 
@@ -15,6 +15,10 @@ def index():
 def startTraining():
     socketio.start_background_task(trainModel)
     return render_template('model.html')
+
+@app.route('/test')
+def testModel():
+    return render_template('test.html')
 
 def trainModel():
     socketio.sleep(1)

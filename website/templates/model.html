@@ -3,25 +3,10 @@
 {% block content %}
 <section class="progress-area">
 	<div class="container h-100">
-        <div class="row h-100">
-            <div class="col-12 col-md-6">
-                <h1>Diabetes diagnosis</h1>
-  				<div id="log"></div>
-            </div>
-            <div class="col-12 col-md-6">
-                <form id="test" method="POST" action='#'>
-			        <input type="text" name="age" id="age" placeholder="Age">
-			        <input type="text" name="preg" id="preg" placeholder="Pregnancies">
-			        <input type="text" name="gluc" id="gluc" placeholder="Glucose">
-			        <input type="text" name="bp" id="bp" placeholder="Blood Pressure">
-			        <input type="text" name="skin" id="skin" placeholder="Skin Thickness">
-			        <input type="text" name="ins" id="ins" placeholder="Insulin">
-			        <input type="text" name="bmi" id="bmi" placeholder="BMI">
-			        <input type="text" name="dpf" id="dpf" placeholder="Diabetes Pedigree Function">
-			        <input type="submit" value="Get diagnosis">
-			    </form>
-			    <div id="prediction"></div>
-            </div>
+        <div class="col-12 col-md-6">
+            <h1>Diabetes diagnosis</h1>
+			<div id="log"></div>
+            <a href="{{ url_for('testModel') }}" class="btn train-btn collapse" id="test-btn">Test Model</a>
         </div>
     </div>
 </section>
@@ -31,13 +16,9 @@
 		socket.on('message', function(msg) {
             $('#log').append('<h5>'+$('<div/>').text(msg.data).html()+'</h5>');
         });
-        socket.on('prediction', function(msg) {
-            $('#prediction').append('<h5>'+$('<div/>').text(msg.data).html()+'</h5>');
-        });
-        $('form#test').submit(function(event) {
-        	X_test = [parseInt($('#preg').val()), parseInt($('#gluc').val()), parseInt($('#bp').val()), parseInt($('#skin').val()), parseInt($('#ins').val()), parseFloat($('#bmi').val()), parseFloat($('#dpf').val()), parseInt($('#age').val())]
-            socket.emit('test', { data:  X_test});
-            return false;
+        socket.on('accuracy', function(msg) {
+            $('#log').append('<h5>'+$('<div/>').text(msg.data).html()+'</h5>');
+            $('#test-btn').removeClass('collapse');
         });
 	})
 </script>

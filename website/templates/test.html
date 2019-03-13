@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="progress-area">
+	<div class="container h-100">
+        <form id="test" method="POST" action='#' class="h-100 w-75">
+            <div class="row h-100 ml-5 mt-2 w-100">
+                <div class="d-flex flex-column w-100">
+                    <div class="d-flex justify-content-center">
+                        <h2>Test model</h2>
+                    </div>
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="text" class="form-control" id="age" placeholder="Enter age">
+                    </div>
+                    <div class="form-group">
+                        <label for="preg">Number of Pregnancies</label>
+                        <input type="text" class="form-control" id="preg" placeholder="Enter pregnancies">
+                    </div>
+                    <div class="form-group">
+                        <label for="gluc">Glucose Level</label>
+                        <input type="text" class="form-control" id="gluc" placeholder="Enter glucose">
+                    </div>
+                    <div class="form-group">
+                        <label for="bp">Blood Pressure</label>
+                        <input type="text" class="form-control" id="bp" placeholder="Enter blood pressure">
+                    </div>
+                    <div class="form-group">
+                        <label for="skin">Skin Thickness</label>
+                        <input type="text" class="form-control" id="skin" placeholder="Enter skin thickness">
+                    </div>
+                    <div class="form-group">
+                        <label for="ins">Insulin Level</label>
+                        <input type="text" class="form-control" id="ins" placeholder="Enter insulin">
+                    </div>
+                    <div class="form-group">
+                        <label for="bmi">Body Mass Index</label>
+                        <input type="text" class="form-control" id="bmi" placeholder="Enter BMI">
+                    </div>
+                    <div class="form-group">
+                        <label for="dpf">Diabetes Pedigree Function</label>
+                        <input type="text" class="form-control" id="dpf" placeholder="Enter diabetes pedigree function">
+                    </div>
+                    <div class="d-flex justify-content-center">
+        	           <input type="submit" value="Get diagnosis" class="btn train-btn">
+                    </div>
+                    <div id="prediction" class="mt-1"></div>
+                </div>
+            </div>
+    	</form>
+    </div>
+</section>
+<script>
+	$(document).ready(function() {
+		var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+        socket.on('prediction', function(msg) {
+            $('#prediction').empty()
+            output = 'Patient has diabetes.'
+            if (msg.data == 0) {
+                output = 'Patient does not have diabetes.'
+            }
+            $('#prediction').append('<h5>'+$('<div/>').text(output).html()+'</h5>');
+        });
+        $('form#test').submit(function(event) {
+        	X_test = [parseInt($('#preg').val()), parseInt($('#gluc').val()), parseInt($('#bp').val()), parseInt($('#skin').val()), parseInt($('#ins').val()), parseFloat($('#bmi').val()), parseFloat($('#dpf').val()), parseInt($('#age').val())]
+            socket.emit('test', { data:  X_test});
+            return false;
+        });
+	})
+</script>
+{% endblock %}
