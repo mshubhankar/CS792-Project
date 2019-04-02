@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import syft as sy
 import copy
+import argparse
 hook = sy.TorchHook(torch)
 from torch import nn
 import torch.nn.functional as F
@@ -12,16 +13,18 @@ from sklearn.preprocessing import StandardScaler
 
 
 class Model:
-    def __init__(self, socketio):
+    def __init__(self, socketio,partition):
         self.model = nn.Linear(8,1)
         self.scaler = StandardScaler()
         self.socketio = socketio
+        self.partition = partition
 
     def trainModel(self, file):
         bob = sy.VirtualWorker(hook, id="bob")
         alice = sy.VirtualWorker(hook, id="alice")
         secure_worker = sy.VirtualWorker(hook, id="secure_worker")
-
+        partition = self.partition
+        print(partition)
         bob.add_workers([alice, secure_worker])
         alice.add_workers([bob, secure_worker])
         secure_worker.add_workers([alice, bob])
@@ -44,13 +47,13 @@ class Model:
 
         data_length,data_width=data.shape
 
-        bobs_data = data[0:int(data_length/2)].send(bob)
+        bobs_data = data[0:int(data_length*partition)].send(bob)
         self.socketio.emit('message', {'data': '{} patients found in Organization A'.format(bobs_data.shape[0])})
-        bobs_target = target[0:int(data_length/2)].send(bob)
+        bobs_target = target[0:int(data_length*partition)].send(bob)
 
-        alices_data = data[int(data_length/2):].send(alice)
+        alices_data = data[int(data_length*(partition)):].send(alice)
         self.socketio.emit('message', {'data': '{} patients found in Organization B'.format(alices_data.shape[0])})
-        alices_target = target[int(data_length/2):].send(alice)
+        alices_target = target[int(data_length*(partition)):].send(alice)
 
         self.socketio.emit('message', {'data': 'Total patients found : {}'.format(bobs_data.shape[0]+alices_data.shape[0])})
 
@@ -125,8 +128,8 @@ class Model:
             alices_model.move(secure_worker)
             bobs_model.move(secure_worker)
             
-            self.model.weight.data.set_(((alices_model.weight.data + bobs_model.weight.data) / 2).get())
-            self.model.bias.data.set_(((alices_model.bias.data + bobs_model.bias.data) / 2).get())
+            self.model.weight.data.set_(((alices_model.weight.data*(1-partition) + bobs_model.weight.data*partition)).get())
+            self.model.bias.data.set_(((alices_model.bias.data*(1-partition) + bobs_model.bias.data*partition) ).get())
 
         self.socketio.emit('stop_model')
 

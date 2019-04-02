@@ -44,7 +44,12 @@
                     <div class="d-flex justify-content-center">
         	           <input type="submit" value="Get diagnosis" class="btn train-btn">
                     </div>
-                    <div id="prediction" class="mt-1"></div>
+                    <div id="prediction" class="mt-1 collapse">
+                        <h5>OUTPUT HL7 MESSAGE:<br>MSH|^~\&|LCS|LCA|LIS|TEST9999|199807311532||ORU^R01|3629|P|2.2<br>
+                            PID|2|<font color="green">2161348462</font>|20809880170|1614614|20809880170^TESTPAT||19760924|M||<br>^^^^<br>00000-0000|||||||86427531^^^03|SSN# 69036149167<br>ORC|NW|8642753100012^LIS|20809880170^LCS||||||<font color="red">TOLBUTAMIDE</font>|||HAVILAND<br>OBR|1|8642753100012^LIS|20809880170^LCS|008342^<font color="green">DIABETES MELLITUS</font>^L|||19980727175800||||||SS#634748641 CH14885 SRC:THROA<br>SRC:PENI|19980727000000||||||20809880170||19980730041800||BN|F<br>OBX|1|ST|008342^<font color="green">BLOOD SUGAR FASTING</font>^L||FINALREPORT|||||N|F||| 19980729160500|BN<br>ORC|NW|8642753100012^LIS|20809880170^LCS||||||<font color="red">ACARBOSE</font>|||HAVILAND<br>OBR|2|8642753100012^LIS|20809880170^LCS|997602^.^L|||19980727175800||||G|||<br>19980727000000||||||20809880170||19980730041800|||F|997602|||008342<br>OBX|2|CE|997231^RESULT 1^L||M415|||||N|F|||19980729160500|BN<br>NTE|1|L| <font color="blue">INSULIN</font><br>NTE|2|L| <font color="blue">BLOOD SUGAR</font><br>NTE|3|L| <font color="blue">HAEMOGLOBIN</font><br>OBX|3|CE|997232^RESULT 2^L||MR105|||||N|F|||19980729160500|BN
+                        </h5>
+                        <h5 id="diagnosis"></h5>
+                    </div>
                 </div>
             </div>
     	</form>
@@ -54,12 +59,14 @@
 	$(document).ready(function() {
 		var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
         socket.on('prediction', function(msg) {
-            $('#prediction').empty()
-            output = 'Patient has diabetes.'
+            $('#prediction').removeClass('collapse')
+            $('#diagnosis').empty()
+            output = 'DIABETES MELLITUS '
+            diagnosis = 'MALIGNANT'
             if (msg.data == 0) {
-                output = 'Patient does not have diabetes.'
+                diagnosis = 'BENIGN'
             }
-            $('#prediction').append('<h5>'+$('<div/>').text(output).html()+'</h5>');
+            $('#diagnosis').append('NTE|1|L|<font color="#cc0099">'+output+diagnosis+'</font>');
         });
         $('form#test').submit(function(event) {
         	X_test = [parseInt($('#preg').val()), parseInt($('#gluc').val()), parseInt($('#bp').val()), parseInt($('#skin').val()), parseInt($('#ins').val()), parseFloat($('#bmi').val()), parseFloat($('#dpf').val()), parseInt($('#age').val())]

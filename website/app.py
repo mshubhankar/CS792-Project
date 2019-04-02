@@ -1,4 +1,4 @@
-from flask import Flask, render_template, g, redirect, url_for
+from flask import Flask, render_template, g, redirect, url_for, request
 from flask_socketio import SocketIO, emit
 from models.model import Model
 
@@ -11,10 +11,11 @@ model = None
 def index():
     return render_template('index.html')
 
-@app.route('/train')
-def startTraining():
+@app.route('/train', methods=["POST"])
+def train():
 	global model
-	model = Model(socketio)
+	value = float(request.form["partition.value"])
+	model = Model(socketio, value)
 	socketio.start_background_task(trainModel)
 	return render_template('model.html')
 
