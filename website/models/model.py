@@ -144,7 +144,16 @@ class Model:
         incorrect_labels=len(np.nonzero(output))
 
         accuracy = 1-(incorrect_labels/len(X_test))
+        from sklearn.metrics.classification_report import classification_report #Testing Report
+        testing_report = classification_report(y_test,pred)
         self.socketio.emit('accuracy', {'data': 'Model trained with accuracy: {0:.2f} %'.format(accuracy*100)})
+
+        training_report = classification_report(y_train,pred)
+        output=pred-y_train
+        incorrect_labels=len(np.nonzero(output))
+
+        training_accuracy = 1-(incorrect_labels/len(X_test))
+
 
     def testModel(self, data):
         data = torch.from_numpy(self.scaler.transform(np.array([data]))).type(torch.FloatTensor)
