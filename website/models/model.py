@@ -39,7 +39,7 @@ class Model:
 
         X=self.scaler.fit_transform(X)
 
-        X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=0)
+        X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=560)
 
         data = torch.from_numpy(X_train)
         target = torch.from_numpy(y_train)
@@ -147,9 +147,9 @@ class Model:
         from sklearn.metrics import classification_report #Testing Report
         testing_report = classification_report(y_test,pred.detach().numpy())
         # print(testing_report)
-
-        self.socketio.emit('testing_report', {'data': 'External Validation Report:\n {} \n'.format(testing_report)})
-        self.socketio.emit('testing_accuracy', {'data': 'Testing accuracy: {0:.2f} % \n'.format(accuracy*100)})
+        # testing_report = testing_report.replace('\n', '<br> <br />')
+        # self.socketio.emit('testing_report', {'data': 'External Validation Report:\n {} \n'.format(testing_report)})
+        # self.socketio.emit('testing_accuracy', {'data': 'Testing accuracy: {0:.2f} % \n'.format(accuracy*100)})
 
         X_train=torch.from_numpy(X_train)
         y_train=torch.from_numpy(y_train)
@@ -162,11 +162,17 @@ class Model:
         incorrect_labels=len(np.nonzero(output))
 
         training_accuracy = 1-(incorrect_labels/len(X_train))
-        
-        self.socketio.emit('training_report', {'data': 'Internal Validation Report:\n {} '.format(training_report)})
-        self.socketio.emit('training_accuracy', {'data': 'Training accuracy: {0:.2f} %'.format(training_accuracy*100)})
+        # training_report = training_report.replace('\n', '<br />')
+
+        # self.socketio.emit('training_report', {'data': 'Internal Validation Report:\n {} '.format(training_report)})
+        self.socketio.emit('training_accuracy', {'data0': 'Training accuracy: {0:.2f} %'.format(training_accuracy*100),
+            'data1': 'External Validation Report:\n {} \n'.format(testing_report),
+            'data2': 'Testing accuracy: {0:.2f} % \n'.format(accuracy*100),
+            'data3': 'Internal Validation Report:\n {} '.format(training_report)})
+            
 
     def testModel(self, data):
         data = torch.from_numpy(self.scaler.transform(np.array([data]))).type(torch.FloatTensor)
         pred = torch.round(self.model(data))
-        self.socketio.emit('prediction', {'data': 0 if pred == 0 else 1})
+        self.socketio.emit('prediction', {'data': 0 if pred == 0 else 1},
+            'testing_report', {'data': 'External Validation Report:\n {} \n'.format(testing_report)})

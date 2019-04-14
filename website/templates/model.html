@@ -99,22 +99,22 @@
                 $('.arrow1').addClass('collapse');
             },3000);
         });
-        socket.on('testing_accuracy', function(msg) {
-            $('#log1').append('<h5>'+$('<div/>').text(msg.data).html()+'</h5>');
+        socket.on('training_accuracy', function(msg) {
+            $('#log1').append('<h5>'+$('<div/>').text(msg.data0+msg.data1+msg.data2+msg.data3).html()+'</h5>');
             $('#test-btn').removeClass('collapse');
         });
-        socket.on('testing_report', function(msg) {
-            $('#log1').append('<h5>'+$('<div/>').text(msg.data).html()+'</h5>');
+        // socket.on('testing_report', function(msg) {
+            // $('#log1').append('<h5>'+$('<div/>').text(msg.data).html()+'</h5>');
             // $('#test-btn').removeClass('collapse');
-        });
-        socket.on('training_accuracy', function(msg) {
-            $('#log1').append('<h5>'+$('<div/>').text(msg.data).html()+'</h5>');
+        // });
+        // socket.on('training_accuracy', function(msg) {
+            // $('#log1').append('<h5>'+$('<div/>').text(msg.data).html()+'</h5>');
             // $('#test-btn').removeClass('collapse');
-        });
-        socket.on('training_report', function(msg) {
-            $('#log1').append('<h5>'+$('<div/>').text(msg.data).html()+'</h5>');
+        // });
+        // socket.on('training_report', function(msg) {
+            // $('#log1').append('<h5>'+$('<div/>').text(msg.data).html()+'</h5>');
             // $('#test-btn').removeClass('collapse');
-        });
+        // });
 	})
 </script>
 {% endblock %}
