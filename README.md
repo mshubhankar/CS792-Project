@@ -1,6 +1,7 @@
 # Privacy preserving distributed neural network
 
-<img src="dataflow.jpg"> <br>
+<img src="general design.png"> <br>
+<img src="application.png"> <br>
 Dependencies : <br>
 PySyft <br>
 PyTorch <br>
